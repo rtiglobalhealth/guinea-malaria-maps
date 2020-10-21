@@ -1,4 +1,4 @@
-from flask import Flask, request, make_response
+from flask import Flask, request, make_response, jsonify
 import pandas as pd
 import numpy as np
 import geopandas as gpd
@@ -29,7 +29,25 @@ columns = ['Organisation unit ID',
            'palu cas confirmés'
           ]
 
+@app.route('/')
+def index():
+    return "<h1>Welcome to our server !!</h1>"
 
+@app.route('/post/', methods=['POST'])
+def post_something():
+    param = request.form.get('name')
+    print(param)
+    # You can add the test cases you made in the previous function, but in our case here you are just testing the POST functionality
+    if param:
+        return jsonify({
+            "Message": f"Welcome {name} to our awesome platform!!",
+            # Add this option to distinct the POST request
+            "METHOD" : "POST"
+        })
+    else:
+        return jsonify({
+            "ERROR": "no name found, please send a name."
+        })
 
 @app.route('/consultations.png', methods=['POST'])
 def get_consultations():
