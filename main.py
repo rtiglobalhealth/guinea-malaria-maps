@@ -1,4 +1,4 @@
-from flask import Flask, request, make_response, jsonify
+from flask import Flask, request, make_response, jsonify, render_template
 import pandas as pd
 import numpy as np
 import geopandas as gpd
@@ -31,14 +31,38 @@ columns = ['Organisation unit ID',
 
 @app.route('/')
 def index():
-    return "<h1>Welcome to our server !!</h1>"
+    return render_template("index.html", message="Hello Flask!");
+    #return "<h1>Welcome to the Guinea Malaria map server !!</h1>"
+
+@app.route('/getmsg/', methods=['GET'])
+def respond():
+    # Retrieve the name from url parameter
+    name = request.args.get("name", None)
+
+    # For debugging
+    print(f"got name {name}")
+
+    response = {}
+
+    # Check if user sent a name at all
+    if not name:
+        response["ERROR"] = "no name found, please send a name."
+    # Check if the user entered a number not a name
+    elif str(name).isdigit():
+        response["ERROR"] = "name can't be numeric."
+    # Now the user entered a valid name
+    else:
+        response["MESSAGE"] = f"Welcome {name} to the Guinea map server!!"
+
+    # Return the response in json format
+    return jsonify(response)
 
 @app.route('/post/', methods=['POST'])
 def post_something():
-    param = request.form.get('name')
-    print(param)
+    name = request.form.get('name')
+    print(name)
     # You can add the test cases you made in the previous function, but in our case here you are just testing the POST functionality
-    if param:
+    if name:
         return jsonify({
             "Message": f"Welcome {name} to our awesome platform!!",
             # Add this option to distinct the POST request
@@ -48,6 +72,7 @@ def post_something():
         return jsonify({
             "ERROR": "no name found, please send a name."
         })
+
 
 @app.route('/consultations.png', methods=['POST'])
 def get_consultations():
@@ -60,17 +85,17 @@ def get_confirmations():
         return makemap(columns[8])
 
 @app.route('/incidence.png', methods=['POST'])
-def get_confirmations():
+def get_incidence():
     if request.method == 'POST':
         return makemap(columns[9])
 
 @app.route('/population.png', methods=['POST'])
-def get_confirmations():
+def get_population():
     if request.method == 'POST':
         return makemap(columns[10])
 
 @app.route('/totalconfirmed.png', methods=['POST'])
-def get_confirmations():
+def get_totalconfirmed():
     if request.method == 'POST':
         return makemap(columns[11])
 
