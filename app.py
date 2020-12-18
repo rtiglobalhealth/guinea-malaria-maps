@@ -4,6 +4,7 @@ import numpy as np
 import geopandas as gpd
 import matplotlib.pyplot as plt
 import json
+from flask_cors import CORS
 
 import matplotlib
 matplotlib.use('Agg')
@@ -14,6 +15,8 @@ from matplotlib.backends.backend_agg import FigureCanvasAgg
 
 
 app = Flask(__name__)
+CORS(app)
+
 df = gpd.read_file("districts2.geojson")
 
 columns = ['Organisation unit ID',
