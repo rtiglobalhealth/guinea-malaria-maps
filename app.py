@@ -3,6 +3,7 @@ import pandas as pd
 import numpy as np
 import geopandas as gpd
 import matplotlib.pyplot as plt
+import json
 
 import matplotlib
 matplotlib.use('Agg')
@@ -104,7 +105,13 @@ def makemap(variable):
 
     content = request.json
 
+
+    if "rows" not in content:
+        resp = make_response("Invalid Report", 400)
+        return resp
+
     pivot_table_df = pd.DataFrame(content["rows"], columns=columns)
+
 
     # join the geodataframe with the csv dataframe
     merged = df.merge(pivot_table_df, how='left', left_on="ORG_CODE", right_on="Organisation unit code")
