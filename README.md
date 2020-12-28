@@ -18,3 +18,5 @@ This server will take in a json object for for district level data in Guinea and
 
 ## And here is what the output looks like
 ![an example](response.png)
+
+curl -H "Content-Type: application/json" "http://guinea-malaria-maps.herokuapp.com/consultations.png" --data @static/example.json

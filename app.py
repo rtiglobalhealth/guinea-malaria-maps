@@ -123,7 +123,7 @@ def makemap(variable):
     vmin, vmax = 0, 100
 
     # create figure and axes for Matplotlib
-    fig, ax = plt.subplots(1, figsize=(10, 10))
+    fig, ax = plt.subplots(1, figsize=(8, 6))
 
     # remove the axis
     ax.axis('off')
@@ -131,7 +131,7 @@ def makemap(variable):
                  fontdict={'fontsize': '16', 'fontweight': '3'})
 
     # Create colorbar legend
-    sm = plt.cm.ScalarMappable(cmap='Blues', norm=plt.Normalize(vmin=vmin, vmax=vmax))
+    sm = plt.cm.ScalarMappable(cmap='Oranges', norm=plt.Normalize(vmin=vmin, vmax=vmax))
 
     # empty array for the data range
     sm.set_array([])
@@ -148,7 +148,7 @@ def makemap(variable):
     for idx, row in merged.iterrows():
         plt.annotate(text=row['NAME_2'], xy=row['coords'], horizontalalignment='center')
 
-    merged.plot(column=variable, cmap='Blues', linewidth=0.8, ax=ax, edgecolor='0.8')
+    merged.plot(column=variable, cmap='Oranges', linewidth=0.8, ax=ax, edgecolor='0.8')
 
     canvas = FigureCanvasAgg(fig)
     output = io.BytesIO()
