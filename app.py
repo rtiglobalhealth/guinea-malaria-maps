@@ -19,18 +19,15 @@ CORS(app)
 
 df = gpd.read_file("districts2.geojson")
 
-columns = ['Organisation unit ID',
-          'Organisation unit',
-           'Organisation unit code',
-           'Organisation unit description',
-           'Reporting month',
-           'Organisation unit parameter',
-           'Organisation unit is parent',
-           'Palu % Toutes Consultations',
-           'Palu % Confirmation',
-           'palu incidence',
-           'population couverte',
-           'palu cas confirmés'
+columns = [
+            'Organisation unit UID',
+            'Organisation unit Name',
+            'Organisation unit code',
+            'Palu % Toutes Consultations',
+            'Palu % Confirmation',
+            'PALU Cas confirmes total de paludisme',
+            'palu incidence',
+            'population couverte',
           ]
 
 @app.route('/')
@@ -81,39 +78,115 @@ def post_something():
 @app.route('/consultations.png', methods=['POST'])
 def get_consultations():
     if request.method == 'POST':
-        return makemap(columns[7])
+        return makemap(columns[3])
 
 @app.route('/confirmations.png', methods=['POST'])
 def get_confirmations():
     if request.method == 'POST':
-        return makemap(columns[8])
+        return makemap(columns[4])
 
 @app.route('/incidence.png', methods=['POST'])
 def get_incidence():
     if request.method == 'POST':
-        return makemap(columns[9])
+        return makemap(columns[5])
 
 @app.route('/population.png', methods=['POST'])
 def get_population():
     if request.method == 'POST':
-        return makemap(columns[10])
+        return makemap(columns[6])
 
 @app.route('/totalconfirmed.png', methods=['POST'])
 def get_totalconfirmed():
     if request.method == 'POST':
-        return makemap(columns[11])
+        return makemap(columns[7])
+
+
+
+district_uids = [
+'q1zvw5TOnZF', # Beyla
+'L1Gr2bAsR4T', # Boffa
+'THgRhO9eF0I', # Boké Prefecture
+'KnR8IiGoSxQ', # Coyah
+'GUSZlo8f9t8', # Dabola
+'mqBP8r7CwKc', # Dalaba
+'IPv04VSahDi', # Dinguiraye
+'gHO8qPxfLdl', # Dixinn
+'VyZGMioVY5z', # Dubréka
+'qmVkCsfziWM', # Faranah Prefecture
+'CXHCAlP68L5', # Forécariah
+'jiGkwTWpBeq', # Fria
+'Motdz3Bql7L', # Gaoual
+'khK0Ewyw0vV', # Guéckédou
+'cbst9kz3DHp', # Kaloum
+'Z71gNmPnc22', # Kankan Prefecture
+'dkWnjo1bSrU', # Kérouané
+'zmSjEUspuVL', # Kindia Prefecture
+'VUj3PJpzty8', # Kissidougou
+'HC3N6HbSdfg', # Koubia
+'pChTVBEAPJJ', # Koundara
+'kVULorkd7Vt', # Kouroussa
+'kVULorkd7Vt', # Kouroussa
+'E1AAcXV9PxL', # Labé Prefecture
+'GuePjEvd6OH', # Lélouma
+'QL7gnB6sSLA', # Lola
+'TEjr8hbfz9a', # Macenta
+'zJZspSfD06r', # Mali
+'LyGsnnzEabg', # Mamou Prefecture
+'ISZZ5m7PYAC', # Mandiana
+'CoKlGkkiN4a', # Matam
+'jIFb011EBWB', # Matoto
+'yvJVq1GjI2A', # Nzérékoré Prefecture
+'ASu054HjT5Y', # Pita
+'D5WJbugzg9L', # Ratoma
+'QZJuFnb2WZ6', # Siguiri
+'C4dKrWoT5au', # Télimélé
+'XraGmJ5tF7e', # Tougué
+'PCa6e3khx5E', # Yomou
+
+]
+
+def transformData(content):
+
+    rows = []
+
+    for uid in district_uids:
+        record = [''] * 8
+
+        record[0] = uid
+        record[1] = content['metaData']['items'][uid]['name']
+        record[2] = content['metaData']['items'][uid]['code']
+
+        for row in content['rows']:
+            if row[1] == uid:
+                if row[0] == 'F0WFRkrKQIW':  # Palu % Toutes Consultations
+                    record[3] = row[3]
+                if row[0] == 'PifhiFgcyq1':  # Proportion de cas de paludisme confirmés
+                    record[4] = row[3]
+                if row[0] == 'ZGVY1P1NNTu':  # PALU Cas confirmes total de paludisme
+                    record[5] = row[3]
+                if row[0] == 'mH24Ynkgo4K':  # Taux d'incidence du paludisme
+                    record[6] = row[3]
+                if row[0] == 'wAsXYLfkVcX':  # Population couverte
+                    record[7] = row[3]
+
+        rows.append(record)
+
+    result = {"rows": rows}
+    return result
+
 
 # the varible has to be in the request body
 def makemap(variable):
 
     content = request.json
 
-
     if "rows" not in content:
         resp = make_response("Invalid Report", 400)
         return resp
 
-    pivot_table_df = pd.DataFrame(content["rows"], columns=columns)
+    new_json = transformData(content)
+
+    pivot_table_df = pd.DataFrame(new_json["rows"], columns=columns)
 
 
     # join the geodataframe with the csv dataframe
@@ -127,8 +200,7 @@ def makemap(variable):
 
     # remove the axis
     ax.axis('off')
-    ax.set_title(variable,
-                 fontdict={'fontsize': '16', 'fontweight': '3'})
+    ax.set_title(variable, fontdict={'fontsize': '16', 'fontweight': '8'})
 
     # Create colorbar legend
     sm = plt.cm.ScalarMappable(cmap='Oranges', norm=plt.Normalize(vmin=vmin, vmax=vmax))
