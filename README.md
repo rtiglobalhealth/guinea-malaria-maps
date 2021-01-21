@@ -7,13 +7,13 @@ This server will take in a json object for for district level data in Guinea and
 1. python app.py
 
 ## End points
-/totalconfirmed.png
+/positivity_rate.png
 
-/population.png
+/confirmation_rate.png
 
 /incidence.png
 
-/confirmations.png
+/population.png
 
 
 ## And here is what the output looks like

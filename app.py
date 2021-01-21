@@ -24,8 +24,7 @@ columns = [
             'Organisation unit Name',
             'Organisation unit code',
             'Palu % Toutes Consultations',
-            'Palu % Confirmation',
-            'PALU Cas confirmes total de paludisme',
+            'Palu % Taux de positivité',
             'palu incidence',
             'population couverte',
           ]
@@ -75,13 +74,15 @@ def post_something():
         })
 
 
-@app.route('/consultations.png', methods=['POST'])
-def get_consultations():
+
+
+@app.route('/confirmation_rate.png', methods=['POST'])
+def get_confirmation_rate():
     if request.method == 'POST':
         return makemap(columns[3])
 
-@app.route('/confirmations.png', methods=['POST'])
-def get_confirmations():
+@app.route('/positivity_rate.png', methods=['POST'])
+def get_positivity_rate():
     if request.method == 'POST':
         return makemap(columns[4])
 
@@ -95,10 +96,7 @@ def get_population():
     if request.method == 'POST':
         return makemap(columns[6])
 
-@app.route('/totalconfirmed.png', methods=['POST'])
-def get_totalconfirmed():
-    if request.method == 'POST':
-        return makemap(columns[7])
+
 
 
 
@@ -150,7 +148,7 @@ def transformData(content):
     rows = []
 
     for uid in district_uids:
-        record = [''] * 8
+        record = [''] * 7
 
         record[0] = uid
         record[1] = content['metaData']['items'][uid]['name']
@@ -158,16 +156,14 @@ def transformData(content):
 
         for row in content['rows']:
             if row[1] == uid:
-                if row[0] == 'F0WFRkrKQIW':  # Palu % Toutes Consultations
+                if row[0] == 'kNmu11OsuGn':  # Palu % Toutes Consultations
                     record[3] = row[3]
-                if row[0] == 'PifhiFgcyq1':  # Proportion de cas de paludisme confirmés
+                if row[0] == 'fk54L22yVF4':  # Taux De Positivite
                     record[4] = row[3]
-                if row[0] == 'ZGVY1P1NNTu':  # PALU Cas confirmes total de paludisme
-                    record[5] = row[3]
                 if row[0] == 'mH24Ynkgo4K':  # Taux d'incidence du paludisme
-                    record[6] = row[3]
+                    record[5] = row[3]
                 if row[0] == 'wAsXYLfkVcX':  # Population couverte
-                    record[7] = row[3]
+                    record[6] = row[3]
 
         rows.append(record)
 

@@ -29,7 +29,13 @@
             </td>
         </tr>
         <tr>
-            <td>Confirmations</td>
+            <td>Positivity Rate</td>
+            <td>
+                curl --request POST -H "Content-Type: application/json" {{request.base_url }}positivity_rate.png --data @<a href="{{ url_for('static', filename = 'example.json') }}">example.json</a> --output confirmations.png
+            </td>
+        </tr>
+        <tr>
+            <td>Confirmation Rate</td>
             <td>
                 curl --request POST -H "Content-Type: application/json" {{request.base_url }}confirmations.png --data @<a href="{{ url_for('static', filename = 'example.json') }}">example.json</a> --output confirmations.png
             </td>
@@ -47,12 +53,7 @@
             </td>
         </tr>
 
-        <tr>
-            <td>Total Confirmations</td>
-            <td>
-                curl --request POST -H "Content-Type: application/json" {{request.base_url }}totalconfirmed.png --data @<a href="{{ url_for('static', filename = 'example.json') }}">example.json</a> --output totalconfirmed.png
-            </td>
-        </tr>
+
     </table>
             <p>
 
