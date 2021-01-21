@@ -218,6 +218,8 @@ def makemap(variable):
 
     merged.plot(column=variable, cmap='Oranges', linewidth=0.8, ax=ax, edgecolor='0.8')
 
+
+
     canvas = FigureCanvasAgg(fig)
     output = io.BytesIO()
     canvas.print_png(output)

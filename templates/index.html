@@ -13,7 +13,7 @@
         </p>
 
         <p>
-            To try this out, download the pivot table Data for Bulletin from the Guinea HMIS as JSON for a given month. Here are some examples
+            To try this out, use the <a href="https://docs.dhis2.org/2.35/en/developer/html/dhis2_developer_manual_full.html#webapi_analytics_dimensions_and_items">analytics API</a>   the pivot table Data for Bulletin from the Guinea HMIS as JSON for a given month. Here are some examples
         </p>
 
         <table border="1">
@@ -21,25 +21,19 @@
             <th>Map Type</th>
             <th>CuRL command</th>
         </tr>
-        <tr>
-            <td>Consultations</td>
+       <tr>
+            <td>Confirmation Rate</td>
             <td>
-                curl --request POST -H "Content-Type: application/json" {{request.base_url }}consultations.png --data @<a href="{{ url_for('static', filename = 'example.json') }}">example.json</a> --output consultations.png
-
+                curl --request POST -H "Content-Type: application/json" {{request.base_url }}confirmation_rate.png --data @<a href="{{ url_for('static', filename = 'example.json') }}">example.json</a> --output confirmation_rate.png
             </td>
         </tr>
         <tr>
             <td>Positivity Rate</td>
             <td>
-                curl --request POST -H "Content-Type: application/json" {{request.base_url }}positivity_rate.png --data @<a href="{{ url_for('static', filename = 'example.json') }}">example.json</a> --output confirmations.png
+                curl --request POST -H "Content-Type: application/json" {{request.base_url }}positivity_rate.png --data @<a href="{{ url_for('static', filename = 'example.json') }}">example.json</a> --output positivity_rate.png
             </td>
         </tr>
-        <tr>
-            <td>Confirmation Rate</td>
-            <td>
-                curl --request POST -H "Content-Type: application/json" {{request.base_url }}confirmations.png --data @<a href="{{ url_for('static', filename = 'example.json') }}">example.json</a> --output confirmations.png
-            </td>
-        </tr>
+
         <tr>
             <td>Incidence</td>
             <td>
@@ -64,7 +58,7 @@
         <p>
             <h4>Here is what one of these maps look like </h4>
         </p>
-        <img src="{{ url_for('static', filename = 'totalconfirmed.png') }}" />
+        <img src="{{ url_for('static', filename = 'incidence.png') }}" />
 
     </div>
   </body>
