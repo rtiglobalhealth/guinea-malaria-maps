@@ -97,9 +97,6 @@ def get_population():
         return makemap(columns[6])
 
 
-
-
-
 district_uids = [
 'q1zvw5TOnZF', # Beyla
 'L1Gr2bAsR4T', # Boffa
@@ -123,7 +120,6 @@ district_uids = [
 'HC3N6HbSdfg', # Koubia
 'pChTVBEAPJJ', # Koundara
 'kVULorkd7Vt', # Kouroussa
-'kVULorkd7Vt', # Kouroussa
 'E1AAcXV9PxL', # Labé Prefecture
 'GuePjEvd6OH', # Lélouma
 'QL7gnB6sSLA', # Lola
@@ -140,9 +136,9 @@ district_uids = [
 'C4dKrWoT5au', # Télimélé
 'XraGmJ5tF7e', # Tougué
 'PCa6e3khx5E', # Yomou
-
 ]
 
+#
 def transformData(content):
 
     rows = []
@@ -153,6 +149,8 @@ def transformData(content):
         record[0] = uid
         record[1] = content['metaData']['items'][uid]['name']
         record[2] = content['metaData']['items'][uid]['code']
+
+        #print("the number of rows is" + str(len(content['rows'])))
 
         for row in content['rows']:
             if row[1] == uid:
@@ -198,27 +196,19 @@ def makemap(variable):
     ax.axis('off')
     ax.set_title(variable, fontdict={'fontsize': '16', 'fontweight': '8'})
 
-    # Create colorbar legend
-    sm = plt.cm.ScalarMappable(cmap='Oranges', norm=plt.Normalize(vmin=vmin, vmax=vmax))
+    ax.legend()
 
-    # empty array for the data range
-    sm.set_array([])
-
-    # or alternatively sm._A = []. Not sure why this step is necessary, but many recommends it# add the colorbar to the figure
-    # fig.colorbar(sm)
-    fig.colorbar(sm, orientation="horizontal", fraction=0.036, pad=0.1, aspect=30)
 
     # Add Labels
     merged['coords'] = merged['geometry'].apply(lambda x: x.representative_point().coords[:])
     merged['coords'] = [coords[0] for coords in merged['coords']]
 
+
     # Add district names
     for idx, row in merged.iterrows():
         plt.annotate(text=row['NAME_2'], xy=row['coords'], horizontalalignment='center')
 
-    merged.plot(column=variable, cmap='Oranges', linewidth=0.8, ax=ax, edgecolor='0.8')
-
-
+    merged.plot(column=variable, cmap='Oranges', linewidth=0.8, ax=ax, edgecolor='0.8', legend=True, scheme='quantiles')
 
     canvas = FigureCanvasAgg(fig)
     output = io.BytesIO()
