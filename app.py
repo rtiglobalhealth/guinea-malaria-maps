@@ -194,21 +194,22 @@ def makemap(variable):
 
     # remove the axis
     ax.axis('off')
-    ax.set_title(variable, fontdict={'fontsize': '16', 'fontweight': '8'})
-
     ax.legend()
 
+    #ax.set_title(variable, fontdict={'fontsize': '16', 'fontweight': '8'})
+
+    leg = ax.get_legend()
+    leg.set_bbox_to_anchor((0., 0., 0.2, 0.2))
 
     # Add Labels
     merged['coords'] = merged['geometry'].apply(lambda x: x.representative_point().coords[:])
     merged['coords'] = [coords[0] for coords in merged['coords']]
 
-
     # Add district names
     for idx, row in merged.iterrows():
         plt.annotate(text=row['NAME_2'], xy=row['coords'], horizontalalignment='center')
 
-    merged.plot(column=variable, cmap='Oranges', linewidth=0.8, ax=ax, edgecolor='0.8', legend=True, scheme='quantiles')
+    merged.plot(column=variable, cmap='OrRd', linewidth=0.8, ax=ax, edgecolor='0.8', legend=True, scheme='quantiles', legend_kwds={'loc': 'lower left'})
 
     canvas = FigureCanvasAgg(fig)
     output = io.BytesIO()
