@@ -182,7 +182,6 @@ def makemap(variable):
 
     pivot_table_df = pd.DataFrame(new_json["rows"], columns=columns)
 
-
     # join the geodataframe with the csv dataframe
     merged = df.merge(pivot_table_df, how='left', left_on="ORG_CODE", right_on="Organisation unit code")
 
@@ -194,12 +193,8 @@ def makemap(variable):
 
     # remove the axis
     ax.axis('off')
+    ax.set_title(variable, fontdict={'fontsize': '16', 'fontweight': '8'})
     ax.legend()
-
-    #ax.set_title(variable, fontdict={'fontsize': '16', 'fontweight': '8'})
-
-    leg = ax.get_legend()
-    leg.set_bbox_to_anchor((0., 0., 0.2, 0.2))
 
     # Add Labels
     merged['coords'] = merged['geometry'].apply(lambda x: x.representative_point().coords[:])
@@ -209,7 +204,7 @@ def makemap(variable):
     for idx, row in merged.iterrows():
         plt.annotate(text=row['NAME_2'], xy=row['coords'], horizontalalignment='center')
 
-    merged.plot(column=variable, cmap='OrRd', linewidth=0.8, ax=ax, edgecolor='0.8', legend=True, scheme='quantiles', legend_kwds={'loc': 'lower left'})
+    merged.plot(column=variable, cmap='Oranges', linewidth=0.8, ax=ax, edgecolor='0.8', legend=True, scheme='quantiles', legend_kwds={'loc': 'lower left'}, vmax=5)
 
     canvas = FigureCanvasAgg(fig)
     output = io.BytesIO()
